@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Growx | Exclusive Trading Webinar</title>
-    
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --primary: #007cf0;
@@ -28,108 +28,262 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        html { scroll-behavior: smooth; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
 
-        body {
+        /* SCROLL CONTAINER */
+        .scroll-container {
             width: 100%;
-            background-color: var(--bg);
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            background: var(--bg);
             font-family: 'Poppins', sans-serif;
             color: #fff;
-            overflow-x: hidden;
         }
 
-        /* STICKY NAV */
-        .sticky-nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 999;
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.07);
+        .scroll-container::-webkit-scrollbar { display: none; }
+
+        /* EACH PAGE */
+        .page {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
+            justify-content: center;
+            padding: 70px 20px 60px;
+            text-align: center;
+            overflow: hidden;
         }
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-logo img {
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--secondary);
-        }
-
-        .nav-logo span {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-btn {
-            padding: 8px 18px;
-            background: var(--btn-gradient);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: zoomPulse 2s infinite ease-in-out;
-        }
-
-        /* BACKGROUND BLOBS (fixed) */
+        /* BG BLOBS */
         .bg-blobs {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            z-index: -1;
+            z-index: 0;
             filter: blur(80px);
             opacity: 0.4;
             pointer-events: none;
         }
 
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            animation: move 20s infinite alternate;
-        }
-
+        .blob { position: absolute; border-radius: 50%; animation: blobmove 20s infinite alternate; }
         .blob-1 { width: 400px; height: 400px; top: -10%; left: -10%; background: #0051ff; }
-        .blob-2 { width: 400px; height: 400px; bottom: 10%; right: -10%; background: #00dfd8; animation-duration: 25s; }
-        .blob-3 { width: 300px; height: 300px; top: 40%; left: 30%; background: #ffffff; opacity: 0.2; animation-duration: 15s; }
+        .blob-2 { width: 400px; height: 400px; bottom: -10%; right: -10%; background: #00dfd8; animation-duration: 25s; }
+        .blob-3 { width: 280px; height: 280px; top: 40%; left: 30%; background: #ffffff; opacity: 0.15; animation-duration: 15s; }
 
-        @keyframes move {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(100px, 100px) scale(1.3); }
+        @keyframes blobmove {
+            from { transform: translate(0,0) scale(1); }
+            to { transform: translate(100px, 80px) scale(1.3); }
         }
 
-        /* ======= SECTION 1 — HERO ======= */
-        .section-hero {
-            min-height: 100vh;
+        .page > * { position: relative; z-index: 2; }
+
+        /* DOTS */
+        .dots {
+            position: fixed;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .dot.active {
+            background: var(--secondary);
+            box-shadow: 0 0 8px var(--secondary);
+            transform: scale(1.4);
+        }
+
+        /* TOP BAR */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 998;
+            background: rgba(2,6,23,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+        }
+
+        .topbar-logo { display: flex; align-items: center; gap: 8px; }
+
+        .topbar-logo img {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--secondary);
+        }
+
+        .topbar-logo span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .topbar-btn {
+            padding: 7px 16px;
+            background: var(--btn-gradient);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* SCROLL DOWN */
+        .scroll-down {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 90px 20px 50px;
-            text-align: center;
+            gap: 4px;
+            opacity: 0.4;
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: bobdown 2s infinite ease-in-out;
+            z-index: 5;
         }
 
+        .scroll-down svg { width: 16px; }
+
+        @keyframes bobdown {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(5px); }
+        }
+
+        /* PAGE NUM */
+        .page-num {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.55rem;
+            letter-spacing: 3px;
+            opacity: 0.25;
+            text-transform: uppercase;
+            z-index: 5;
+        }
+
+        /* ===== SHARED ===== */
+        .section-tag {
+            font-size: 0.68rem;
+            letter-spacing: 4px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .big-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.9rem, 8vw, 3rem);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .med-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.35rem, 5.5vw, 2rem);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .divider {
+            width: 50px; height: 2px;
+            background: var(--btn-gradient);
+            border-radius: 2px;
+            margin: 10px auto 18px;
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .btn-telegram {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            padding: 18px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            background: var(--btn-gradient);
+            text-decoration: none;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,124,240,0.4);
+            animation: zoomPulse 2s infinite ease-in-out;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        @keyframes zoomPulse {
+            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,124,240,0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 15px 40px rgba(0,124,240,0.65); }
+            100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,124,240,0.4); }
+        }
+
+        .slot-alert {
+            margin-top: 11px;
+            font-size: 0.66rem;
+            color: #f87171;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            animation: flicker 1.5s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
+        }
+
+        /* ===== PAGE 1: HERO ===== */
         .logo-ring {
-            width: 120px; height: 120px;
+            width: 105px; height: 105px;
             border-radius: 50%;
             padding: 3px;
             background: var(--accent-gradient);
-            box-shadow: 0 0 30px rgba(0,124,240,0.6);
+            box-shadow: 0 0 28px rgba(0,124,240,0.6);
             animation: float 4s ease-in-out infinite;
-            margin: 0 auto 18px;
+            margin: 0 auto 12px;
         }
 
         .logo-ring img {
@@ -140,269 +294,142 @@
             display: block;
         }
 
-        .hero-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 9vw, 3.2rem);
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 2px 12px rgba(255,255,255,0.2));
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .hero-subtitle {
-            font-size: 0.78rem;
-            letter-spacing: 4px;
-            color: var(--secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(0,223,216,0.5);
-        }
+        .countdown-wrap { margin: 12px 0 16px; }
 
-        /* Countdown Timer */
-        .countdown-wrap {
-            margin: 18px 0 22px;
-        }
-
-        .countdown-label {
-            font-size: 0.65rem;
+        .cd-label {
+            font-size: 0.58rem;
             letter-spacing: 3px;
-            color: #888;
+            color: #777;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
         }
 
-        .countdown {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .countdown { display: flex; gap: 8px; justify-content: center; }
 
         .cd-box {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            padding: 10px 14px;
-            min-width: 58px;
+            padding: 9px 11px;
+            min-width: 54px;
             text-align: center;
         }
 
-        .cd-num {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #fff;
-            line-height: 1;
-        }
+        .cd-num { font-size: 1.45rem; font-weight: 800; color: #fff; line-height: 1; }
+        .cd-unit { font-size: 0.5rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 2px; margin-top: 3px; }
 
-        .cd-unit {
-            font-size: 0.55rem;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 3px;
-        }
-
-        .glass-panel {
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 25px;
-            border-radius: 28px;
+        .hero-panel {
+            padding: 18px 20px;
             width: 100%;
-            max-width: 400px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            max-width: 380px;
+            margin-bottom: 20px;
         }
 
-        .glass-panel p {
-            font-size: 0.92rem;
-            line-height: 1.7;
-            color: #d1d5db;
-        }
+        .hero-panel p { font-size: 0.86rem; line-height: 1.65; color: #d1d5db; }
 
         .stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 18px;
+            margin-top: 14px;
             border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 14px;
+            padding-top: 13px;
         }
 
-        .stat-item b { color: #fff; font-size: 1.15rem; display: block; }
-        .stat-item p { font-size: 0.62rem; text-transform: uppercase; color: var(--secondary); }
+        .stat-item b { color: #fff; font-size: 1.05rem; display: block; }
+        .stat-item p { font-size: 0.58rem; text-transform: uppercase; color: var(--secondary); }
 
-        .scroll-hint {
-            margin-top: 30px;
+        /* ===== PAGE 2: LEARN ===== */
+        .learn-list {
+            width: 100%;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            opacity: 0.5;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            animation: bounce 2s infinite;
+            gap: 9px;
+            margin-bottom: 20px;
         }
 
-        .scroll-hint svg { width: 20px; }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
-        }
-
-        /* ======= SECTION 2 — WHAT YOU'LL LEARN ======= */
-        .section-learn {
-            padding: 70px 20px;
-            max-width: 480px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .section-tag {
-            font-size: 0.7rem;
-            letter-spacing: 4px;
-            color: var(--secondary);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.4rem, 6vw, 2rem);
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-        }
-
-        .learn-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .learn-card {
+        .learn-item {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .learn-card:hover { transform: translateY(-3px); border-color: rgba(0,223,216,0.3); }
-
-        .learn-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px; height: 100%;
-            background: var(--btn-gradient);
-        }
-
-        .learn-icon {
-            font-size: 1.6rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .learn-text h3 {
-            font-size: 0.92rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-
-        .learn-text p {
-            font-size: 0.78rem;
-            color: #9ca3af;
-            line-height: 1.5;
-        }
-
-        /* ======= SECTION 3 — ABOUT + SOCIAL PROOF ======= */
-        .section-about {
-            padding: 60px 20px 80px;
-            max-width: 480px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .testimonial-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 35px;
-        }
-
-        .testimonial-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 18px 20px;
-            text-align: left;
-        }
-
-        .testi-header {
+            border: 1px solid rgba(255,255,255,0.07);
+            border-left: 3px solid var(--primary);
+            border-radius: 14px;
+            padding: 12px 15px;
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
+            text-align: left;
         }
 
-        .testi-avatar {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: var(--btn-gradient);
+        .li-icon { font-size: 1.3rem; flex-shrink: 0; }
+        .li-text h3 { font-size: 0.83rem; font-weight: 600; color: #fff; }
+        .li-text p { font-size: 0.7rem; color: #9ca3af; margin-top: 1px; line-height: 1.4; }
+
+        /* ===== PAGE 3: TESTIMONIALS ===== */
+        .testi-list {
+            width: 100%;
+            max-width: 420px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1rem;
-            flex-shrink: 0;
+            flex-direction: column;
+            gap: 11px;
+            margin-bottom: 16px;
         }
 
-        .testi-name { font-size: 0.88rem; font-weight: 600; }
-        .testi-stars { color: #fbbf24; font-size: 0.75rem; }
-        .testi-text { font-size: 0.8rem; color: #9ca3af; line-height: 1.55; }
+        .testi-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        .testi-top { display: flex; align-items: center; gap: 11px; margin-bottom: 8px; }
+
+        .testi-av {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.95rem; flex-shrink: 0;
+        }
+
+        .testi-name { font-size: 0.83rem; font-weight: 600; }
+        .testi-stars { color: #fbbf24; font-size: 0.7rem; }
+        .testi-text { font-size: 0.75rem; color: #9ca3af; line-height: 1.5; }
 
         .badge-row {
             display: flex;
-            justify-content: center;
-            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 35px;
+            justify-content: center;
+            gap: 7px;
+            margin-bottom: 18px;
+            max-width: 420px;
         }
 
         .badge {
             background: rgba(0,124,240,0.1);
             border: 1px solid rgba(0,124,240,0.3);
             border-radius: 50px;
-            padding: 8px 16px;
-            font-size: 0.72rem;
+            padding: 6px 13px;
+            font-size: 0.68rem;
             color: var(--secondary);
             font-weight: 600;
         }
 
-        /* FINAL CTA */
-        .final-cta {
+        /* ===== PAGE 4: FINAL CTA ===== */
+        .final-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 26px 22px;
+            margin-bottom: 20px;
             background: rgba(0,124,240,0.06);
             border: 1px solid rgba(0,124,240,0.2);
-            border-radius: 28px;
-            padding: 30px 20px;
-            margin-bottom: 10px;
         }
 
-        .final-cta h2 {
+        .final-box h2 {
             font-family: 'Cinzel', serif;
             font-size: clamp(1.2rem, 5vw, 1.7rem);
             background: var(--accent-gradient);
@@ -411,89 +438,21 @@
             margin-bottom: 10px;
         }
 
-        .final-cta p {
-            font-size: 0.85rem;
+        .final-box p {
+            font-size: 0.82rem;
             color: #9ca3af;
-            margin-bottom: 22px;
-            line-height: 1.6;
+            line-height: 1.65;
+            margin-bottom: 20px;
         }
 
-        /* BUTTONS */
-        .btn-telegram {
-            width: 100%;
-            max-width: 340px;
-            padding: 20px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #fff;
-            background: var(--btn-gradient);
-            text-decoration: none;
-            border-radius: 50px;
-            text-transform: uppercase;
-            display: block;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,124,240,0.4);
-            animation: zoomPulse 2s infinite ease-in-out;
-            border: 1px solid rgba(255,255,255,0.2);
-            letter-spacing: 1px;
-        }
-
-        @keyframes zoomPulse {
-            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,124,240,0.4); }
-            50% { transform: scale(1.03); box-shadow: 0 15px 40px rgba(0,124,240,0.6); }
-            100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,124,240,0.4); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        /* SLOT TICKER */
-        .slot-ticker {
-            margin-top: 14px;
-            font-size: 0.7rem;
-            color: #f87171;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 600;
-            animation: flicker 1.5s infinite;
-        }
-
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* FOOTER */
-        .footer {
-            padding: 30px 20px 40px;
-            text-align: center;
-            font-size: 0.68rem;
-            opacity: 0.55;
+        .footer-note {
+            font-size: 0.63rem;
+            opacity: 0.5;
             letter-spacing: 1.5px;
+            margin-top: 18px;
         }
 
         .agency-link { color: var(--secondary); text-decoration: none; font-weight: 600; }
-
-        /* Divider */
-        .divider {
-            width: 60px; height: 2px;
-            background: var(--btn-gradient);
-            border-radius: 2px;
-            margin: 0 auto 28px;
-        }
-
-        /* Scroll progress bar */
-        .progress-bar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
-            background: var(--btn-gradient);
-            z-index: 9999;
-            width: 0%;
-            transition: width 0.1s;
-        }
     </style>
 </head>
 <body>
@@ -502,223 +461,207 @@
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<!-- Scroll Progress -->
-<div class="progress-bar" id="progressBar"></div>
-
-<!-- Sticky Nav -->
-<nav class="sticky-nav">
-    <div class="nav-logo">
-        <img src="https://gogamex.fun/wp-content/uploads/2026/02/groowxx.jpg" alt="Growx">
-        <span>GROWX</span>
-    </div>
-    <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="nav-btn">Join Free ✦</a>
-</nav>
-
-<!-- BG Blobs -->
+<!-- Fixed BG Blobs -->
 <div class="bg-blobs">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 </div>
 
-<!-- ===== SECTION 1: HERO ===== -->
-<section class="section-hero" id="hero">
-    <div class="logo-ring">
-        <img src="https://gogamex.fun/wp-content/uploads/2026/02/groowxx.jpg" alt="Growx Logo">
+<!-- Top Bar -->
+<nav class="topbar">
+    <div class="topbar-logo">
+        <img src="https://gogamex.fun/wp-content/uploads/2026/02/groowxx.jpg" alt="Growx">
+        <span>GROWX</span>
     </div>
+    <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="topbar-btn">Join Free ✦</a>
+</nav>
 
-    <p class="hero-subtitle">✦ Live Trading Webinar ✦</p>
-    <h1 class="hero-title">Master The Market</h1>
+<!-- Page Dots -->
+<div class="dots">
+    <div class="dot active" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+    <div class="dot" onclick="goTo(3)"></div>
+</div>
 
-    <!-- Countdown -->
-    <div class="countdown-wrap">
-        <p class="countdown-label">⏳ Webinar Starts In</p>
-        <div class="countdown">
-            <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-unit">Hrs</div></div>
-            <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-unit">Min</div></div>
-            <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-unit">Sec</div></div>
+<!-- MAIN SCROLL -->
+<div class="scroll-container" id="scroller">
+
+    <!-- PAGE 1: HERO -->
+    <div class="page" id="page-0">
+        <div class="logo-ring">
+            <img src="https://gogamex.fun/wp-content/uploads/2026/02/groowxx.jpg" alt="Logo">
         </div>
-    </div>
 
-    <div class="glass-panel">
-        <p>Ready to unlock consistent profits? Join our <b>FREE Masterclass</b> where we reveal the exact <b>"Smart Money"</b> strategies used to predict market reversals with high accuracy.</p>
-        <div class="stats">
-            <div class="stat-item"><b>60 MIN</b><p>Live Training</p></div>
-            <div class="stat-item"><b>FREE</b><p>Access Cost</p></div>
-            <div class="stat-item"><b>Q&A</b><p>Live Support</p></div>
-        </div>
-    </div>
+        <p class="section-tag">✦ Live Trading Webinar ✦</p>
+        <h1 class="big-title">Master The Market</h1>
 
-    <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">🚀 Join Free Webinar</a>
-    <div class="slot-ticker">⚠ Only 47 Slots Remaining</div>
-
-    <div class="scroll-hint">
-        <span>Scroll to explore</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-    </div>
-</section>
-
-<!-- ===== SECTION 2: WHAT YOU'LL LEARN ===== -->
-<section class="section-learn" id="learn">
-    <p class="section-tag">📚 Webinar Curriculum</p>
-    <h2 class="section-title">What You'll Learn</h2>
-    <div class="divider"></div>
-
-    <div class="learn-grid">
-        <div class="learn-card">
-            <div class="learn-icon">📊</div>
-            <div class="learn-text">
-                <h3>Smart Money Concepts (SMC)</h3>
-                <p>Learn how institutional traders move markets & how to ride their waves for maximum profit.</p>
+        <div class="countdown-wrap">
+            <p class="cd-label">⏳ Webinar Starts In</p>
+            <div class="countdown">
+                <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-unit">Hrs</div></div>
+                <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-unit">Min</div></div>
+                <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-unit">Sec</div></div>
             </div>
         </div>
-        <div class="learn-card">
-            <div class="learn-icon">🎯</div>
-            <div class="learn-text">
-                <h3>High-Accuracy Entry & Exit Points</h3>
-                <p>Discover precise techniques to enter trades at the perfect moment and exit with maximum gains.</p>
+
+        <div class="glass hero-panel">
+            <p>Ready to unlock consistent profits? Join our <b>FREE Masterclass</b> — we reveal the exact <b>"Smart Money"</b> strategies to predict market reversals with high accuracy.</p>
+            <div class="stats">
+                <div class="stat-item"><b>60 MIN</b><p>Live Training</p></div>
+                <div class="stat-item"><b>FREE</b><p>Access Cost</p></div>
+                <div class="stat-item"><b>Q&A</b><p>Live Support</p></div>
             </div>
         </div>
-        <div class="learn-card">
-            <div class="learn-icon">🔄</div>
-            <div class="learn-text">
-                <h3>Market Reversal Prediction</h3>
-                <p>Identify when a trend is about to flip before it happens — giving you an edge over retail traders.</p>
-            </div>
-        </div>
-        <div class="learn-card">
-            <div class="learn-icon">🛡️</div>
-            <div class="learn-text">
-                <h3>Risk Management Mastery</h3>
-                <p>Protect your capital with battle-tested risk rules used by professional traders worldwide.</p>
-            </div>
-        </div>
-        <div class="learn-card">
-            <div class="learn-icon">💬</div>
-            <div class="learn-text">
-                <h3>Live Q&A Session</h3>
-                <p>Get your personal trading questions answered live by an experienced market analyst.</p>
-            </div>
+
+        <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">🚀 Join Free Webinar</a>
+        <div class="slot-alert">⚠ Only 47 Slots Remaining</div>
+
+        <span class="page-num">01 / 04</span>
+        <div class="scroll-down">
+            <span>Scroll Down</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </div>
     </div>
 
-    <br>
-    <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">🎓 Reserve My Seat</a>
-    <div class="slot-ticker" style="margin-top:14px;">⚠ Limited Seats — Register Now</div>
-</section>
+    <!-- PAGE 2: WHAT YOU LEARN -->
+    <div class="page" id="page-1">
+        <p class="section-tag">📚 Webinar Curriculum</p>
+        <h2 class="med-title">What You'll Learn</h2>
+        <div class="divider"></div>
 
-<!-- ===== SECTION 3: SOCIAL PROOF + FINAL CTA ===== -->
-<section class="section-about" id="proof">
-    <p class="section-tag">⭐ What Students Say</p>
-    <h2 class="section-title">Real Results</h2>
-    <div class="divider"></div>
+        <div class="learn-list">
+            <div class="learn-item">
+                <div class="li-icon">📊</div>
+                <div class="li-text"><h3>Smart Money Concepts (SMC)</h3><p>Learn how institutions move markets & ride their waves for maximum profit.</p></div>
+            </div>
+            <div class="learn-item">
+                <div class="li-icon">🎯</div>
+                <div class="li-text"><h3>High-Accuracy Entry & Exit Points</h3><p>Enter trades at the perfect moment, exit with maximum gains.</p></div>
+            </div>
+            <div class="learn-item">
+                <div class="li-icon">🔄</div>
+                <div class="li-text"><h3>Market Reversal Prediction</h3><p>Identify trend flips before they happen — gain the edge.</p></div>
+            </div>
+            <div class="learn-item">
+                <div class="li-icon">🛡️</div>
+                <div class="li-text"><h3>Risk Management Mastery</h3><p>Protect your capital with battle-tested rules used by pros.</p></div>
+            </div>
+            <div class="learn-item">
+                <div class="li-icon">💬</div>
+                <div class="li-text"><h3>Live Q&A Session</h3><p>Get personal trading doubts cleared live by an expert analyst.</p></div>
+            </div>
+        </div>
 
-    <div class="testimonial-grid">
-        <div class="testimonial-card">
-            <div class="testi-header">
-                <div class="testi-avatar">R</div>
-                <div>
-                    <div class="testi-name">Rahul M.</div>
-                    <div class="testi-stars">★★★★★</div>
+        <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">🎓 Reserve My Seat</a>
+        <div class="slot-alert">⚠ Limited Seats — Register Now</div>
+
+        <span class="page-num">02 / 04</span>
+        <div class="scroll-down">
+            <span>Scroll Down</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+    </div>
+
+    <!-- PAGE 3: TESTIMONIALS -->
+    <div class="page" id="page-2">
+        <p class="section-tag">⭐ What Students Say</p>
+        <h2 class="med-title">Real Results</h2>
+        <div class="divider"></div>
+
+        <div class="testi-list">
+            <div class="testi-card">
+                <div class="testi-top">
+                    <div class="testi-av" style="background:linear-gradient(135deg,#007cf0,#00dfd8)">R</div>
+                    <div><div class="testi-name">Rahul M.</div><div class="testi-stars">★★★★★</div></div>
                 </div>
+                <p class="testi-text">"The SMC strategy completely changed how I look at charts. Made my first profitable week just 2 days after the webinar!"</p>
             </div>
-            <p class="testi-text">"Best webinar I've attended. The SMC strategy they taught completely changed how I look at charts. Made my first profitable week after just 2 days!"</p>
-        </div>
-        <div class="testimonial-card">
-            <div class="testi-header">
-                <div class="testi-avatar" style="background: linear-gradient(135deg, #00dfd8, #007cf0);">P</div>
-                <div>
-                    <div class="testi-name">Priya S.</div>
-                    <div class="testi-stars">★★★★★</div>
+            <div class="testi-card">
+                <div class="testi-top">
+                    <div class="testi-av" style="background:linear-gradient(135deg,#00dfd8,#007cf0)">P</div>
+                    <div><div class="testi-name">Priya S.</div><div class="testi-stars">★★★★★</div></div>
                 </div>
+                <p class="testi-text">"Total beginner here. After this free session I finally understood what institutions do & how to follow them!"</p>
             </div>
-            <p class="testi-text">"I was a complete beginner. After this free session, I finally understood what institutions do & how to follow them. Highly recommend!"</p>
-        </div>
-        <div class="testimonial-card">
-            <div class="testi-header">
-                <div class="testi-avatar" style="background: linear-gradient(135deg, #a855f7, #007cf0);">A</div>
-                <div>
-                    <div class="testi-name">Arjun K.</div>
-                    <div class="testi-stars">★★★★★</div>
+            <div class="testi-card">
+                <div class="testi-top">
+                    <div class="testi-av" style="background:linear-gradient(135deg,#a855f7,#007cf0)">A</div>
+                    <div><div class="testi-name">Arjun K.</div><div class="testi-stars">★★★★★</div></div>
                 </div>
+                <p class="testi-text">"The live Q&A is gold. Content is genuinely premium — and it's completely FREE. Don't miss it!"</p>
             </div>
-            <p class="testi-text">"The live Q&A is gold. Got my exact doubts cleared. The team is super knowledgeable and the content is genuinely premium — and it's FREE!"</p>
+        </div>
+
+        <div class="badge-row">
+            <div class="badge">✅ 100% Free</div>
+            <div class="badge">🔒 No Credit Card</div>
+            <div class="badge">📱 Via Telegram</div>
+            <div class="badge">⚡ Instant Access</div>
+        </div>
+
+        <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">✦ Join The Community</a>
+
+        <span class="page-num">03 / 04</span>
+        <div class="scroll-down">
+            <span>Scroll Down</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </div>
     </div>
 
-    <!-- Badges -->
-    <div class="badge-row">
-        <div class="badge">✅ 100% Free</div>
-        <div class="badge">🔒 No Credit Card</div>
-        <div class="badge">📱 Join via Telegram</div>
-        <div class="badge">⚡ Instant Access</div>
+    <!-- PAGE 4: FINAL CTA -->
+    <div class="page" id="page-3">
+        <div class="glass final-box">
+            <h2>Secure Your Free Spot Now</h2>
+            <p>Don't miss this <b>once-a-month</b> live session. Join <b>1000+ traders</b> who are already transforming their trading journey with Growx.</p>
+            <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">✦ JOIN FREE WEBINAR NOW ✦</a>
+            <div class="slot-alert" style="margin-top:14px;">🔴 LIVE · Registration Closing Soon</div>
+        </div>
+
+        <div class="footer-note">
+            <p>✦ LIMITED SLOTS AVAILABLE ✦</p>
+            <p style="margin-top:10px;">Managed by<br>
+                <a href="https://telegram.me/+TRlJl628l-FkMWE9" class="agency-link">NEXGROWW AGENCY</a>
+            </p>
+            <p style="margin-top:10px; opacity:0.4;">© 2026 Growx · All Rights Reserved</p>
+        </div>
+
+        <span class="page-num">04 / 04</span>
     </div>
 
-    <!-- Final CTA Box -->
-    <div class="final-cta">
-        <h2>Secure Your Free Spot Now</h2>
-        <p>Don't miss this <b>once-a-month</b> live session. Join 1000+ traders who are already transforming their trading journey with us.</p>
-        <a href="https://t.me/+Gy-ZoTzjjcQ5MjA1" class="btn-telegram">✦ JOIN FREE WEBINAR NOW ✦</a>
-        <div class="slot-ticker" style="margin-top:16px;">🔴 LIVE · Registration Closing Soon</div>
-    </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-    <p>✦ LIMITED SLOTS AVAILABLE ✦</p>
-    <p style="margin-top: 10px;">Managed by<br>
-        <a href="https://telegram.me/+TRlJl628l-FkMWE9" class="agency-link">NEXGROWW AGENCY</a>
-    </p>
-    <p style="margin-top:12px; opacity:0.4;">© 2026 Growx · All Rights Reserved</p>
-</footer>
+</div>
 
 <script>
-    // Scroll Progress Bar
-    window.addEventListener('scroll', () => {
-        const scrollTop = document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const progress = (scrollTop / scrollHeight) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
-    });
+    // Countdown
+    const target = new Date();
+    target.setHours(target.getHours() + 52);
 
-    // Countdown Timer — next webinar in ~2 days 4 hours
-    function startCountdown() {
-        const target = new Date();
-        target.setHours(target.getHours() + 52); // ~2 days ahead
+    function updateCD() {
+        const diff = target - new Date();
+        if (diff <= 0) return;
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+        document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+        document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+    }
+    updateCD();
+    setInterval(updateCD, 1000);
 
-        function update() {
-            const now = new Date();
-            const diff = target - now;
-            if (diff <= 0) { return; }
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
-            document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
-            document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
-        }
+    // Dot nav
+    const scroller = document.getElementById('scroller');
+    const dots = document.querySelectorAll('.dot');
+    const pages = document.querySelectorAll('.page');
 
-        update();
-        setInterval(update, 1000);
+    function goTo(i) {
+        pages[i].scrollIntoView({ behavior: 'smooth' });
     }
 
-    startCountdown();
-
-    // Fade-in on scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.style.opacity = '1';
-                e.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.learn-card, .testimonial-card, .final-cta, .badge-row').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+    scroller.addEventListener('scroll', () => {
+        const current = Math.round(scroller.scrollTop / scroller.clientHeight);
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
     });
 </script>
 </body>
